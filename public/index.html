@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mehmet Talha Kaya — Software Engineer</title>
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+  :root{
+    --bg:#0a0a0b;
+    --bg2:#111113;
+    --bg3:#1a1a1e;
+    --text:#e8e6e1;
+    --text-dim:#8a8884;
+    --accent:#c9f06b;
+    --accent2:#6bc9f0;
+    --accent3:#f06b8a;
+    --border:#2a2a2e;
+    --radius:14px;
+  }
+
+  html{scroll-behavior:smooth;font-size:16px;overflow-y:scroll}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;line-height:1.65}
+
+  ::selection{background:var(--accent);color:var(--bg)}
+
+  /* ─── Noise overlay ─── */
+  body::before{
+    content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;
+    opacity:.035;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ─── Scrollbar ─── */
+  ::-webkit-scrollbar{width:6px}
+  ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+  ::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+  /* ─── Layout ─── */
+  .container{max-width:1200px;margin:0 auto;padding:0 clamp(20px,4vw,60px)}
+
+  /* ─── Nav ─── */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    background:rgba(10,10,11,.7);border-bottom:1px solid var(--border);
+  }
+  nav .container{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .nav-logo{font-family:'Instrument Serif',serif;font-size:1.5rem;color:var(--text);text-decoration:none;letter-spacing:-.02em}
+  .nav-logo span{color:var(--accent)}
+  .nav-links{display:flex;gap:32px;list-style:none;align-items:center;position:absolute;left:50%;transform:translateX(-50%)}
+  .nav-auth{margin-left:auto}
+  .nav-auth-btn{
+    display:inline-flex;align-items:center;gap:8px;padding:8px 20px;
+    border:1px solid var(--border);border-radius:60px;color:var(--accent);
+    text-decoration:none;font-size:.8rem;font-weight:600;transition:all .3s;
+    letter-spacing:.02em;text-transform:uppercase;white-space:nowrap;
+  }
+  .nav-auth-btn:hover{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+  .nav-auth-btn:hover svg{stroke:var(--bg)}
+  .nav-user-btn{
+    background:none;border:1px solid var(--border);border-radius:60px;padding:8px 20px;
+    color:var(--accent);font-family:inherit;font-size:.8rem;font-weight:600;
+    cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .3s;
+    letter-spacing:.02em;text-transform:uppercase;
+  }
+  .nav-user-btn:hover{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+  .nav-user-btn:hover svg{stroke:var(--bg)}
+  .nav-links a{color:var(--text-dim);text-decoration:none;font-size:.875rem;font-weight:500;transition:color .3s;letter-spacing:.02em;text-transform:uppercase}
+  .nav-links a:hover{color:var(--accent)}
+
+  @media(max-width:640px){.nav-links{gap:16px}.nav-links a{font-size:.75rem}}
+
+  /* ─── Hero ─── */
+  .hero{
+    min-height:100vh;display:flex;align-items:center;position:relative;
+    padding-top:64px;
+  }
+  .hero-content{position:relative;z-index:2;width:100%}
+  .hero-label{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:.8rem;font-weight:600;color:var(--accent);
+    letter-spacing:.15em;text-transform:uppercase;
+    margin-bottom:24px;
+    opacity:0;animation:fadeUp .8s ease forwards .3s;
+  }
+  .hero-label::before{content:'';width:24px;height:2px;background:var(--accent)}
+  .hero-title{
+    font-family:'Instrument Serif',serif;
+    font-size:clamp(3rem,8vw,7rem);line-height:1;
+    letter-spacing:-.04em;
+    margin-bottom:24px;
+    opacity:0;animation:fadeUp .8s ease forwards .5s;
+  }
+  .hero-title em{font-style:italic;color:var(--accent)}
+  .hero-subtitle{
+    font-size:clamp(1rem,2vw,1.25rem);color:var(--text-dim);
+    max-width:520px;font-weight:300;
+    opacity:0;animation:fadeUp .8s ease forwards .7s;
+  }
+  .hero-cta{
+    display:flex;flex-wrap:wrap;gap:16px;margin-top:40px;
+    opacity:0;animation:fadeUp .8s ease forwards .9s;
+  }
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:14px 28px;border-radius:60px;font-size:.9rem;font-weight:600;
+    text-decoration:none;transition:all .35s cubic-bezier(.4,0,.2,1);
+    cursor:pointer;border:none;font-family:inherit;
+  }
+  .btn-primary{background:var(--accent);color:var(--bg)}
+  .btn-primary:hover{background:#d4f57a;transform:translateY(-2px);box-shadow:0 8px 30px rgba(201,240,107,.2)}
+  .btn-outline{background:transparent;color:var(--text);border:1px solid var(--border)}
+  .btn-outline:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+
+  .hero-grid-bg{
+    position:absolute;inset:0;overflow:hidden;z-index:0;
+  }
+  .hero-grid-bg::after{
+    content:'';position:absolute;inset:0;
+    background:
+      radial-gradient(ellipse 60% 50% at 70% 40%,rgba(201,240,107,.06),transparent),
+      radial-gradient(ellipse 40% 50% at 20% 60%,rgba(107,201,240,.04),transparent);
+  }
+  .grid-lines{
+    position:absolute;inset:0;
+    background-image:
+      linear-gradient(var(--border) 1px,transparent 1px),
+      linear-gradient(90deg,var(--border) 1px,transparent 1px);
+    background-size:80px 80px;
+    opacity:.15;
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 50%,black,transparent);
+  }
+
+  /* Floating orbs */
+  .orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.12;animation:float 8s ease-in-out infinite}
+  .orb-1{width:400px;height:400px;background:var(--accent);top:10%;right:10%;animation-delay:0s}
+  .orb-2{width:300px;height:300px;background:var(--accent2);bottom:20%;left:5%;animation-delay:3s}
+  .orb-3{width:200px;height:200px;background:var(--accent3);top:50%;right:30%;animation-delay:5s}
+
+  /* ─── Section base ─── */
+  section{padding:clamp(80px,12vw,140px) 0}
+  .section-label{
+    font-size:.75rem;font-weight:700;color:var(--accent);
+    text-transform:uppercase;letter-spacing:.2em;margin-bottom:12px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .section-label::before{content:'';width:16px;height:2px;background:var(--accent)}
+  .section-title{
+    font-family:'Instrument Serif',serif;
+    font-size:clamp(2rem,5vw,3.5rem);line-height:1.1;
+    letter-spacing:-.03em;margin-bottom:48px;
+  }
+
+  /* ─── About ─── */
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+  .about-text p{color:var(--text-dim);margin-bottom:20px;font-size:1.05rem}
+  .about-text p strong{color:var(--text);font-weight:600}
+
+  .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px}
+  .stat{
+    background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
+    padding:24px;text-align:center;
+    transition:border-color .3s,transform .3s;
+  }
+  .stat:hover{border-color:var(--accent);transform:translateY(-4px)}
+  .stat-num{font-family:'Instrument Serif',serif;font-size:2.5rem;color:var(--accent);line-height:1}
+  .stat-label{font-size:.8rem;color:var(--text-dim);margin-top:6px;text-transform:uppercase;letter-spacing:.1em}
+
+  .tech-stack{display:flex;flex-wrap:wrap;gap:10px;margin-top:32px}
+  .tech-tag{
+    padding:8px 16px;border-radius:60px;font-size:.8rem;font-weight:500;
+    background:var(--bg3);border:1px solid var(--border);color:var(--text-dim);
+    transition:all .3s;
+  }
+  .tech-tag:hover{border-color:var(--accent);color:var(--accent)}
+
+  @media(max-width:768px){.about-grid{grid-template-columns:1fr}.stat-row{grid-template-columns:repeat(2,1fr)}}
+
+  /* ─── Projects ─── */
+  .project-card{
+    background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
+    overflow:hidden;transition:border-color .4s,transform .4s;
+    margin-bottom:32px;
+  }
+  .project-card:hover{border-color:var(--accent);transform:translateY(-4px)}
+  .project-header{
+    padding:40px;display:flex;justify-content:space-between;align-items:flex-start;
+    gap:24px;flex-wrap:wrap;
+  }
+  .project-badge{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:6px 14px;border-radius:60px;font-size:.7rem;font-weight:700;
+    text-transform:uppercase;letter-spacing:.1em;
+    background:rgba(201,240,107,.1);color:var(--accent);border:1px solid rgba(201,240,107,.2);
+  }
+  .project-name{font-family:'Instrument Serif',serif;font-size:clamp(1.5rem,3vw,2.2rem);margin-top:12px;letter-spacing:-.02em}
+  .project-desc{color:var(--text-dim);margin-top:10px;max-width:600px;font-size:.95rem}
+  .project-link{
+    display:inline-flex;align-items:center;gap:8px;color:var(--accent);
+    font-weight:600;text-decoration:none;font-size:.9rem;
+    padding:10px 20px;border:1px solid rgba(201,240,107,.3);border-radius:60px;
+    transition:all .3s;white-space:nowrap;
+  }
+  .project-link:hover{background:var(--accent);color:var(--bg)}
+  .project-tech{display:flex;flex-wrap:wrap;gap:8px;padding:0 40px 32px}
+  .project-tech span{
+    padding:5px 12px;border-radius:6px;font-size:.75rem;font-weight:500;
+    font-family:'JetBrains Mono',monospace;
+    background:var(--bg3);color:var(--text-dim);
+  }
+  .project-team{
+    padding:0 40px 40px;
+    border-top:1px solid var(--border);margin-top:0;padding-top:24px;
+  }
+  .project-team h4{font-size:.75rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
+  .team-list{display:flex;flex-wrap:wrap;gap:8px}
+  .team-member{
+    padding:6px 14px;border-radius:60px;font-size:.8rem;
+    background:var(--bg);border:1px solid var(--border);color:var(--text-dim);
+  }
+  .team-member.lead{border-color:var(--accent);color:var(--accent)}
+
+  /* ─── GitHub Activity ─── */
+  .github-section{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+  .github-profile{
+    display:flex;align-items:center;gap:24px;
+    padding:32px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);
+    margin-bottom:32px;
+  }
+  .github-avatar{
+    width:80px;height:80px;border-radius:50%;border:2px solid var(--accent);
+    object-fit:cover;
+  }
+  .github-info h3{font-family:'Instrument Serif',serif;font-size:1.5rem}
+  .github-info p{color:var(--text-dim);font-size:.9rem;margin-top:4px}
+  .github-link{
+    margin-left:auto;
+    display:inline-flex;align-items:center;gap:8px;
+    padding:12px 24px;border-radius:60px;
+    background:var(--bg2);border:1px solid var(--border);
+    color:var(--text);text-decoration:none;font-size:.85rem;font-weight:600;
+    transition:all .3s;
+  }
+  .github-link:hover{border-color:var(--accent);color:var(--accent)}
+
+  .repo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px}
+  .repo-card{
+    padding:28px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);
+    transition:all .3s;position:relative;overflow:hidden;
+    text-decoration:none;color:inherit;display:block;
+  }
+  .repo-card:hover{border-color:var(--accent);transform:translateY(-3px)}
+  .repo-card::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:3px;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    transform:scaleX(0);transform-origin:left;transition:transform .4s;
+  }
+  .repo-card:hover::before{transform:scaleX(1)}
+  .repo-name{font-family:'JetBrains Mono',monospace;font-size:1rem;font-weight:500;color:var(--accent);margin-bottom:8px}
+  .repo-desc{font-size:.85rem;color:var(--text-dim);line-height:1.6}
+  .repo-meta{display:flex;gap:16px;margin-top:16px;font-size:.75rem;color:var(--text-dim)}
+  .repo-meta span{display:flex;align-items:center;gap:4px}
+
+  @media(max-width:640px){.github-profile{flex-direction:column;text-align:center}.github-link{margin:12px auto 0}}
+
+  /* ─── YouTube ─── */
+  .yt-wrapper{
+    display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;
+  }
+  .yt-embed{
+    width:100%;aspect-ratio:16/9;border-radius:var(--radius);overflow:hidden;
+    border:1px solid var(--border);
+    background:var(--bg2);
+  }
+  .yt-embed iframe{width:100%;height:100%;border:none}
+  .yt-info h3{font-family:'Instrument Serif',serif;font-size:clamp(1.5rem,3vw,2.2rem);margin-bottom:16px}
+  .yt-info p{color:var(--text-dim);font-size:1rem;margin-bottom:24px}
+  .yt-channel-link{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:14px 28px;border-radius:60px;
+    background:#ff0033;color:#fff;font-weight:700;font-size:.9rem;
+    text-decoration:none;transition:all .3s;
+  }
+  .yt-channel-link:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(255,0,51,.3)}
+
+  @media(max-width:768px){.yt-wrapper{grid-template-columns:1fr}}
+
+  /* ─── Contact ─── */
+  .contact-section{text-align:center}
+  .contact-links{display:flex;justify-content:center;flex-wrap:wrap;gap:16px;margin-top:40px}
+  .contact-card{
+    display:flex;align-items:center;gap:12px;
+    padding:18px 28px;border-radius:var(--radius);
+    background:var(--bg2);border:1px solid var(--border);
+    text-decoration:none;color:var(--text);font-size:.9rem;font-weight:500;
+    transition:all .3s;
+  }
+  .contact-card:hover{border-color:var(--accent);transform:translateY(-3px);color:var(--accent)}
+  .contact-card svg{width:20px;height:20px;flex-shrink:0}
+
+  /* ─── Footer ─── */
+  footer{
+    border-top:1px solid var(--border);padding:40px 0;text-align:center;
+    color:var(--text-dim);font-size:.8rem;
+  }
+  footer a{color:var(--accent);text-decoration:none}
+
+  /* ─── Animations ─── */
+  @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes float{0%,100%{transform:translate(0,0)}50%{transform:translate(20px,-30px)}}
+
+  .reveal{opacity:0;transform:translateY(40px);transition:opacity .8s ease,transform .8s ease}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+
+  /* ─── Cursor glow ─── */
+  .cursor-glow{
+    position:fixed;width:300px;height:300px;border-radius:50%;
+    pointer-events:none;z-index:1;
+    background:radial-gradient(circle,rgba(201,240,107,.06),transparent 70%);
+    transform:translate(-50%,-50%);
+    transition:left .15s ease,top .15s ease;
+  }
+
+  /* ─── Horizontal marquee ─── */
+  .marquee-wrap{
+    overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+    padding:18px 0;
+  }
+  .marquee{
+    display:flex;gap:48px;white-space:nowrap;
+    animation:marquee 25s linear infinite;
+    width:max-content;
+  }
+  .marquee span{
+    font-family:'Instrument Serif',serif;font-size:1.3rem;color:var(--text-dim);
+    display:flex;align-items:center;gap:16px;
+  }
+  .marquee span::after{content:'◆';font-size:.5rem;color:var(--accent)}
+  @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+<link rel="stylesheet" href="/lang.css">
+<link rel="stylesheet" href="/mobile.css">
+<script src="/lang.js" defer></script>
+<script src="/mobile.js" defer></script>
+</head>
+<body>
+
+<div class="cursor-glow" id="cursor"></div>
+
+<!-- ═══════ NAV ═══════ -->
+<nav>
+  <div class="container" style="position:relative">
+    <a href="#" class="nav-logo">mtk<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="#about" data-i18n="nav.about">Hakkımda</a></li>
+      <li><a href="#projects" data-i18n="nav.projects">Projeler</a></li>
+      <li><a href="#github">GitHub</a></li>
+      <li><a href="#youtube">YouTube</a></li>
+      <li><a href="#contact" data-i18n="nav.contact">İletişim</a></li>
+    </ul>
+    <div class="nav-auth">
+      <a href="/loginregister.html" id="auth-nav" class="nav-auth-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg><span data-i18n="nav.login">Giriş Yap / Kayıt Ol</span></a>
+      <div id="user-menu" style="display:none;position:relative">
+        <button id="user-btn" class="nav-user-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg>
+          <span id="user-name"></span>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div id="user-dropdown" style="display:none;position:absolute;right:0;top:calc(100% + 8px);background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:8px;min-width:180px;z-index:200;box-shadow:0 8px 30px rgba(0,0,0,.4)">
+          <a href="/dashboard.html" style="display:flex;align-items:center;gap:10px;padding:10px 14px;color:var(--text);text-decoration:none;border-radius:8px;font-size:.875rem;transition:background .2s" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background='transparent'">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            <span data-i18n="dash.dashboard">Kullanıcı Paneli</span>
+          </a>
+          <a href="/admin.html" id="admin-link" style="display:none;align-items:center;gap:10px;padding:10px 14px;color:var(--accent);text-decoration:none;border-radius:8px;font-size:.875rem;transition:background .2s" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background='transparent'">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>
+            <span data-i18n="dash.adminpanel">Yönetici Paneli</span>
+          </a>
+          <div style="height:1px;background:var(--border);margin:4px 0"></div>
+          <button onclick="logout()" style="display:flex;align-items:center;gap:10px;padding:10px 14px;color:var(--accent3,#f06b8a);background:none;border:none;border-radius:8px;font-size:.875rem;font-family:inherit;cursor:pointer;width:100%;transition:background .2s" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background='transparent'">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <span data-i18n="dash.logout">Çıkış Yap</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <button class="lang-toggle" id="lang-toggle" title="Change language"><img src="/flag-tr.svg" alt="TR" class="active"><img src="/flag-en.svg" alt="EN"></button>
+    <button class="hamburger-btn" id="hamburger-btn" aria-label="Menü">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#about" data-i18n="nav.about">Hakkımda</a>
+  <a href="#projects" data-i18n="nav.projects">Projeler</a>
+  <a href="#github">GitHub</a>
+  <a href="#youtube">YouTube</a>
+  <a href="#contact" data-i18n="nav.contact">İletişim</a>
+</div>
+
+<!-- ═══════ HERO ═══════ -->
+<section class="hero">
+  <div class="hero-grid-bg">
+    <div class="grid-lines"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-label" data-i18n="hero.label">Yazılım Mühendisliği Öğrencisi</div>
+      <h1 class="hero-title">Mehmet Talha<br><em>Kaya</em></h1>
+      <p class="hero-subtitle" data-i18n="hero.subtitle" data-i18n-html>Fırat Üniversitesi Yazılım Mühendisliği öğrencisi. Yapay zeka, gömülü sistemler, siber güvenlik ve yazılım projeleri üzerine çalışıyorum.</p>
+      <div class="hero-cta">
+        <a href="https://github.com/mehmettalhakaya" target="_blank" class="btn btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+          <span data-i18n="hero.github">GitHub'ı İncele</span>
+        </a>
+        <a href="#projects" class="btn btn-outline"><span data-i18n="hero.projects">Projelerim ↓</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ MARQUEE ═══════ -->
+<div class="marquee-wrap">
+  <div class="marquee">
+    <span>C++</span><span>C#</span><span>Java</span><span>Python</span><span data-i18n="marquee.ai">Yapay Zeka</span>
+    <span>Git & GitHub</span><span data-i18n="marquee.se">Yazılım Mühendisliği</span><span data-i18n="marquee.embedded">Gömülü Sistemler</span><span data-i18n="marquee.cyber">Siber Güvenlik</span>
+    <span>Unity</span><span data-i18n="marquee.game">Oyun Geliştirme</span><span data-i18n="marquee.problem">Problem Çözme</span>
+    <span>C++</span><span>C#</span><span>Java</span><span>Python</span><span data-i18n="marquee.ai">Yapay Zeka</span>
+    <span>Git & GitHub</span><span data-i18n="marquee.se">Yazılım Mühendisliği</span><span data-i18n="marquee.embedded">Gömülü Sistemler</span><span data-i18n="marquee.cyber">Siber Güvenlik</span>
+    <span>Unity</span><span data-i18n="marquee.game">Oyun Geliştirme</span><span data-i18n="marquee.problem">Problem Çözme</span>
+  </div>
+</div>
+
+<!-- ═══════ ABOUT ═══════ -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid reveal">
+      <div class="about-text">
+        <p class="section-label" data-i18n="about.label">Hakkımda</p>
+        <h2 class="section-title" data-i18n="about.title" data-i18n-html>Kod yazmak, <br>geleceği inşa etmek.</h2>
+        <p data-i18n="about.p1" data-i18n-html><strong>Fırat Üniversitesi Yazılım Mühendisliği</strong> bölümünde eğitim alıyorum. Teknolojiye olan tutkumu projelerimle hayata geçiriyorum.</p>
+        <p data-i18n="about.p2" data-i18n-html>Özellikle <strong>yapay zeka</strong>, <strong>gömülü sistemler</strong> ve <strong>siber güvenlik</strong> alanlarında çalışıyorum. C++, C# ve Python ile projeler geliştirmek en büyük motivasyonum.</p>
+        <p data-i18n="about.p3">YouTube kanalımda yazılım mühendisliği sürecimi ve projelerimi paylaşıyorum.</p>
+        <div class="tech-stack">
+          <span class="tech-tag">C++</span>
+          <span class="tech-tag">C#</span>
+          <span class="tech-tag">Java</span>
+          <span class="tech-tag">Python</span>
+          <span class="tech-tag" data-i18n="about.tag.ai">Yapay Zeka</span>
+          <span class="tech-tag" data-i18n="about.tag.embedded">Gömülü Sistemler</span>
+          <span class="tech-tag" data-i18n="about.tag.cyber">Siber Güvenlik</span>
+          <span class="tech-tag">Unity</span>
+          <span class="tech-tag">Git</span>
+        </div>
+      </div>
+      <div>
+        <div class="stat-row">
+          <div class="stat">
+            <div class="stat-num" id="total-repos">-</div>
+            <div class="stat-label" data-i18n="stat.repo">Repo</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num" id="total-commits">-</div>
+            <div class="stat-label" data-i18n="stat.commit">Commit</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num" id="total-stars">-</div>
+            <div class="stat-label" data-i18n="stat.star">Yıldız</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ PROJECTS ═══════ -->
+<section id="projects">
+  <div class="container">
+    <p class="section-label reveal" data-i18n="projects.label">Projeler</p>
+    <h2 class="section-title reveal"><span data-i18n="projects.title" data-i18n-html>Üzerinde çalıştığım<br>projeler.</span></h2>
+
+    <div class="project-card reveal">
+      <div class="project-header">
+        <div>
+          <span class="project-badge">
+            <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="var(--accent)"/></svg>
+            <span data-i18n="projects.badge">Geliştirme Aşamasında</span>
+          </span>
+          <h3 class="project-name" data-i18n="projects.name">🏙️ Sanal Şehir Keşfi</h3>
+          <p class="project-desc"><span data-i18n="projects.desc">Kullanıcıların tarihi ve kültürel mekanları sanal gerçeklik ortamında keşfedebileceği bir VR simülasyon uygulaması. Sanal bir şehir ortamında dolaşarak önemli yapılar hakkında bilgi edinme ve etkileşimli keşif deneyimi.</span></p>
+        </div>
+        <a href="https://github.com/mehmettalhakaya/sanalsehirkeyfi" target="_blank" class="project-link">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          <span data-i18n="projects.link">GitHub'da İncele</span>
+        </a>
+      </div>
+      <div class="project-tech">
+        <span>Unity</span>
+        <span>C#</span>
+        <span>Blender</span>
+        <span>Git</span>
+        <span>VR</span>
+      </div>
+      <div class="project-team">
+        <h4 data-i18n="projects.team">Proje Ekibi</h4>
+        <div class="team-list">
+          <span class="team-member lead">👨‍💼 Mehmet Talha Kaya (PM)</span>
+          <span class="team-member">Melike Gücin</span>
+          <span class="team-member">Mustafa Murat Hilaloğlu</span>
+          <span class="team-member">Cemre Yurtsever</span>
+          <span class="team-member">Fırat Seçkin</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ GITHUB ═══════ -->
+<section id="github" class="github-section">
+  <div class="container">
+    <p class="section-label reveal" data-i18n="github.label">GitHub</p>
+    <h2 class="section-title reveal"><span data-i18n="github.title" data-i18n-html>Açık kaynak &<br>geliştirme.</span></h2>
+
+    <div class="github-profile reveal">
+      <img src="https://avatars.githubusercontent.com/u/236460759?v=4" alt="Mehmet Talha Kaya" class="github-avatar">
+      <div class="github-info">
+        <h3>mehmettalhakaya</h3>
+        <p><span data-i18n="github.info">Yazılım Mühendisliği Öğrencisi · Fırat Üniversitesi</span></p>
+      </div>
+      <a href="https://github.com/mehmettalhakaya" target="_blank" class="github-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+        <span data-i18n="github.view">Profili Görüntüle</span>
+      </a>
+    </div>
+
+    <div class="repo-grid reveal" id="repo-grid">
+      <div class="repo-card">
+        <div class="repo-name" data-i18n="js.loading">Yükleniyor...</div>
+        <div class="repo-desc" data-i18n="js.loadingdesc">GitHub repo verileri getiriliyor.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ YOUTUBE ═══════ -->
+<section id="youtube">
+  <div class="container">
+    <p class="section-label reveal" data-i18n="youtube.label">YouTube</p>
+    <h2 class="section-title reveal"><span data-i18n="youtube.title" data-i18n-html>İçeriklerim &<br>videolarım.</span></h2>
+
+    <div class="yt-wrapper reveal">
+      <div class="yt-embed">
+        <iframe 
+		width="100%" 
+		height="400"
+		src="https://www.youtube.com/embed/KwpaVtJRIZQ"
+		title="YouTube video player"
+		frameborder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+		allowfullscreen>
+		</iframe>
+      </div>
+      <div class="yt-info">
+        <h3>@MEHMETTALHAKAYA-SE</h3>
+        <p><span data-i18n="youtube.desc">Yazılım mühendisliği sürecimi, projelerimi ve öğrendiklerimi YouTube kanalımda paylaşıyorum. Abone olarak destek verebilirsiniz!</span></p>
+        <a href="https://www.youtube.com/@MEHMETTALHAKAYA-SE" target="_blank" class="yt-channel-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          <span data-i18n="youtube.link">Kanala Git</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ CONTACT ═══════ -->
+<section id="contact" class="contact-section">
+  <div class="container">
+    <p class="section-label reveal" style="justify-content:center" data-i18n="contact.label">İletişim</p>
+    <h2 class="section-title reveal" data-i18n="contact.title">Birlikte çalışalım.</h2>
+    <p class="reveal" style="color:var(--text-dim);max-width:480px;margin:0 auto"><span data-i18n="contact.desc">Projeler, iş birlikleri veya sadece merhaba demek için bana ulaşabilirsiniz.</span></p>
+
+    <div class="contact-links reveal">
+      <a href="https://github.com/mehmettalhakaya" target="_blank" class="contact-card">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+        GitHub
+      </a>
+      <a href="https://www.linkedin.com/in/mehmet-talha-kaya-08b710381/" target="_blank" class="contact-card">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        LinkedIn
+      </a>
+      <a href="https://www.youtube.com/@MEHMETTALHAKAYA-SE" target="_blank" class="contact-card">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        YouTube
+      </a>
+      <a href="mailto:250542009@firat.edu.tr" class="contact-card">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        <span data-i18n="contact.email">E-posta</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer>
+  <div class="container">
+    <p><span data-i18n="footer.copy">© 2026 Mehmet Talha Kaya · Fırat Üniversitesi Yazılım Mühendisliği</span></p>
+  </div>
+</footer>
+
+<script>
+  // Cursor glow
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Smooth nav highlight (sadece # linkler için)
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', e => {
+      const href = link.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+  // ─── Auth durumunu kontrol et ───
+  async function checkAuth() {
+    const token = localStorage.getItem('token');
+    const authNav = document.getElementById('auth-nav');
+    const userMenu = document.getElementById('user-menu');
+    const adminLink = document.getElementById('admin-link');
+
+    if (!token) return;
+
+    try {
+      const res = await fetch('/api/me', {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+
+      if (!res.ok) throw new Error('unauthorized');
+
+      const data = await res.json();
+      const userData = data.user;
+
+      localStorage.setItem('user', JSON.stringify(userData));
+      authNav.style.display = 'none';
+      userMenu.style.display = 'block';
+      document.getElementById('user-name').textContent = userData.username;
+      adminLink.style.display = userData.role === 'admin' ? 'flex' : 'none';
+    } catch (e) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      authNav.style.display = 'inline-flex';
+      userMenu.style.display = 'none';
+      adminLink.style.display = 'none';
+    }
+  }
+
+  // Dropdown toggle
+  const userBtn = document.getElementById('user-btn');
+  const userDropdown = document.getElementById('user-dropdown');
+  if (userBtn) {
+    userBtn.addEventListener('click', () => {
+      userDropdown.style.display = userDropdown.style.display === 'none' ? 'block' : 'none';
+    });
+    document.addEventListener('click', (e) => {
+      if (!userBtn.contains(e.target) && !userDropdown.contains(e.target)) {
+        userDropdown.style.display = 'none';
+      }
+    });
+  }
+
+  function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.reload();
+  }
+
+  checkAuth();
+
+  const GITHUB_USERNAME = 'mehmettalhakaya';
+  const EXCLUDED_REPOS = [];
+
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text ?? '';
+    return div.innerHTML;
+  }
+
+  function formatRepoType(repo) {
+    if (repo.fork) return window.t ? t('js.fork') : 'Fork';
+    if (repo.private) return 'Private';
+    if (repo.name.toLowerCase() === GITHUB_USERNAME.toLowerCase()) return window.t ? t('js.profilerepo') : 'Profil Repo';
+    return repo.archived ? (window.t ? t('js.archive') : 'Arşiv') : (window.t ? t('js.publicrepo') : 'Public Repo');
+  }
+
+  async function getCommitCount(owner, repo) {
+    try {
+      const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/commits?per_page=1`);
+      if (!res.ok) return 0;
+
+      const linkHeader = res.headers.get('Link');
+      if (linkHeader) {
+        const match = linkHeader.match(/page=(\d+)>; rel="last"/);
+        if (match) return parseInt(match[1], 10);
+      }
+
+      const data = await res.json();
+      if (Array.isArray(data)) return data.length;
+      return 0;
+    } catch (error) {
+      return 0;
+    }
+  }
+
+  function renderRepos(repos, commitMap = {}) {
+    const repoGrid = document.getElementById('repo-grid');
+    if (!repoGrid) return;
+
+    if (!repos.length) {
+      repoGrid.innerHTML = `
+        <div class="repo-card">
+          <div class="repo-name">${window.t ? t("js.norepo") : "Repo bulunamadı"}</div>
+          <div class="repo-desc">${window.t ? t("js.norepodesc") : "GitHub hesabında gösterilecek uygun repo bulunamadı."}</div>
+        </div>
+      `;
+      return;
+    }
+
+    repoGrid.innerHTML = repos.map(repo => {
+      const description = repo.description
+        ? escapeHtml(repo.description)
+        : (window.t ? t('js.nodesc') : 'Bu repo için açıklama girilmemiş.');
+      const language = repo.language ? escapeHtml(repo.language) : (window.t ? t('js.nolang') : 'Dil yok');
+      const stars = repo.stargazers_count ?? 0;
+      const commits = commitMap[repo.name];
+
+      return `
+        <a href="${repo.html_url}" target="_blank" class="repo-card">
+          <div class="repo-name">📦 ${escapeHtml(repo.name)}</div>
+          <div class="repo-desc">${description}</div>
+          <div class="repo-meta">
+            <span>⭐ ${stars}</span>
+            <span>💻 ${language}</span>
+            <span>${typeof commits === 'number' ? `📝 ${commits} commit` : (window.t ? '📝 ' + t('js.commitloading') : '📝 Commit yükleniyor')}</span>
+            <span>📁 ${formatRepoType(repo)}</span>
+          </div>
+        </a>
+      `;
+    }).join('');
+  }
+
+  async function updateGitHubData() {
+    const repoGrid = document.getElementById('repo-grid');
+
+    try {
+      const repoRes = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`);
+      if (!repoRes.ok) throw new Error('Repo verileri alınamadı');
+
+      const repos = await repoRes.json();
+      if (!Array.isArray(repos)) throw new Error('Geçersiz repo verisi');
+
+      const filteredRepos = repos
+        .filter(repo => !EXCLUDED_REPOS.includes(repo.name))
+        .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+
+      document.getElementById('total-repos').textContent = filteredRepos.length;
+      document.getElementById('total-stars').textContent =
+        filteredRepos.reduce((sum, repo) => sum + (repo.stargazers_count || 0), 0);
+
+      window._cachedRepos = filteredRepos;
+      window._cachedCommitMap = {};
+      renderRepos(filteredRepos);
+
+      const commitMap = {};
+      let totalCommits = 0;
+
+      for (const repo of filteredRepos) {
+        const count = await getCommitCount(GITHUB_USERNAME, repo.name);
+        commitMap[repo.name] = count;
+        totalCommits += count;
+        window._cachedCommitMap = Object.assign({}, commitMap);
+        renderRepos(filteredRepos, commitMap);
+      }
+
+      document.getElementById('total-commits').textContent = totalCommits;
+    } catch (error) {
+      console.error(error);
+      if (repoGrid) {
+        repoGrid.innerHTML = `
+          <div class="repo-card">
+            <div class="repo-name">${window.t ? t("js.githubfail") : "GitHub verisi alınamadı"}</div>
+            <div class="repo-desc">${window.t ? t("js.githubfaildesc") : "API limiti, internet erişimi veya kullanıcı adı nedeniyle repo verileri yüklenemedi."}</div>
+          </div>
+        `;
+      }
+    }
+  }
+
+  updateGitHubData();
+
+  // Re-render repos when language changes
+  window.addEventListener('langChanged', function() {
+    if (window._cachedRepos && window._cachedCommitMap) {
+      renderRepos(window._cachedRepos, window._cachedCommitMap);
+    }
+  });
+</script>
+</body>
+</html>

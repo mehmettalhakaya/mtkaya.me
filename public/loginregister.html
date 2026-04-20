@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Giriş Yap — Mehmet Talha Kaya</title>
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+  :root{
+    --bg:#0a0a0b;
+    --bg2:#111113;
+    --bg3:#1a1a1e;
+    --text:#e8e6e1;
+    --text-dim:#8a8884;
+    --accent:#c9f06b;
+    --accent2:#6bc9f0;
+    --accent3:#f06b8a;
+    --border:#2a2a2e;
+    --radius:14px;
+    --error:#f06b6b;
+    --success:#6bf0a0;
+  }
+
+  html{font-size:16px;overflow-y:scroll}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;line-height:1.65;min-height:100vh;display:flex;flex-direction:column}
+
+  ::selection{background:var(--accent);color:var(--bg)}
+
+  body::before{
+    content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+    opacity:.035;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  ::-webkit-scrollbar{width:6px}
+  ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+  ::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+  /* ─── Nav ─── */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    background:rgba(10,10,11,.7);border-bottom:1px solid var(--border);
+  }
+  nav .container{display:flex;align-items:center;justify-content:space-between;height:64px;max-width:1200px;margin:0 auto;padding:0 clamp(20px,4vw,60px);position:relative}
+  .nav-logo{font-family:'Instrument Serif',serif;font-size:1.5rem;color:var(--text);text-decoration:none;letter-spacing:-.02em}
+  .nav-logo span{color:var(--accent)}
+  .nav-links{display:flex;gap:32px;list-style:none;align-items:center;position:absolute;left:50%;transform:translateX(-50%)}
+  .nav-links a{color:var(--text-dim);text-decoration:none;font-size:.875rem;font-weight:500;transition:color .3s;letter-spacing:.02em;text-transform:uppercase}
+  .nav-links a:hover{color:var(--accent)}
+  .nav-auth{margin-left:auto}
+  .nav-auth-btn{
+    display:inline-flex;align-items:center;gap:8px;padding:8px 20px;
+    border:1px solid var(--border);border-radius:60px;color:var(--accent);
+    text-decoration:none;font-size:.8rem;font-weight:600;transition:all .3s;
+    letter-spacing:.02em;text-transform:uppercase;white-space:nowrap;
+  }
+  .nav-auth-btn:hover{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+  .nav-auth-btn:hover svg{stroke:var(--bg)}
+  @media(max-width:640px){.nav-links{gap:16px}.nav-links a{font-size:.75rem}}
+
+  /* ─── Auth Container ─── */
+  .auth-wrapper{
+    flex:1;display:flex;align-items:center;justify-content:center;
+    padding:100px 20px 40px;
+    position:relative;z-index:1;
+  }
+
+  .auth-bg{
+    position:fixed;inset:0;overflow:hidden;z-index:0;pointer-events:none;
+  }
+  .auth-bg::after{
+    content:'';position:absolute;inset:0;
+    background:
+      radial-gradient(ellipse 50% 40% at 50% 40%,rgba(201,240,107,.05),transparent),
+      radial-gradient(ellipse 40% 50% at 30% 70%,rgba(107,201,240,.03),transparent);
+  }
+  .orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:.08;animation:float 8s ease-in-out infinite}
+  .orb-1{width:350px;height:350px;background:var(--accent);top:15%;right:20%;animation-delay:0s}
+  .orb-2{width:250px;height:250px;background:var(--accent2);bottom:25%;left:10%;animation-delay:3s}
+
+  @keyframes float{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-30px)}
+  }
+
+  .auth-card{
+    width:100%;max-width:440px;
+    background:var(--bg2);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:48px 40px;
+    position:relative;
+    z-index:2;
+    animation:cardIn .6s ease forwards;
+  }
+
+  @keyframes cardIn{
+    from{opacity:0;transform:translateY(20px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+
+  .auth-header{text-align:center;margin-bottom:36px}
+  .auth-header h1{
+    font-family:'Instrument Serif',serif;
+    font-size:2.2rem;letter-spacing:-.03em;
+    margin-bottom:8px;
+  }
+  .auth-header h1 em{font-style:italic;color:var(--accent)}
+  .auth-header p{color:var(--text-dim);font-size:.95rem}
+
+  /* ─── Tab Toggle ─── */
+  .auth-tabs{
+    display:flex;
+    background:var(--bg);
+    border:1px solid var(--border);
+    border-radius:60px;
+    padding:4px;
+    margin-bottom:32px;
+  }
+  .auth-tab{
+    flex:1;padding:12px 0;text-align:center;
+    font-size:.875rem;font-weight:600;
+    color:var(--text-dim);
+    background:transparent;border:none;
+    border-radius:60px;cursor:pointer;
+    transition:all .3s;
+    font-family:inherit;
+  }
+  .auth-tab.active{
+    background:var(--accent);color:var(--bg);
+  }
+  .auth-tab:not(.active):hover{color:var(--text)}
+
+  /* ─── Form ─── */
+  .auth-form{display:none;flex-direction:column;gap:20px}
+  .auth-form.active{display:flex}
+
+  .form-group{display:flex;flex-direction:column;gap:8px}
+  .form-group label{
+    font-size:.8rem;font-weight:600;color:var(--text-dim);
+    text-transform:uppercase;letter-spacing:.1em;
+  }
+  .form-group input{
+    padding:14px 18px;
+    background:var(--bg);
+    border:1px solid var(--border);
+    border-radius:10px;
+    color:var(--text);
+    font-size:.95rem;
+    font-family:inherit;
+    transition:border-color .3s,box-shadow .3s;
+    outline:none;
+  }
+  .form-group input:focus{
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(201,240,107,.1);
+  }
+  .form-group input::placeholder{color:var(--text-dim);opacity:.5}
+
+  .password-wrapper{position:relative}
+  .password-wrapper input{width:100%;padding-right:50px}
+  .password-toggle{
+    position:absolute;right:14px;top:50%;transform:translateY(-50%);
+    background:none;border:none;color:var(--text-dim);cursor:pointer;
+    font-size:1.1rem;transition:color .3s;padding:4px;
+  }
+  .password-toggle:hover{color:var(--accent)}
+
+  .btn-submit{
+    padding:16px;border-radius:60px;font-size:.95rem;font-weight:700;
+    border:none;cursor:pointer;font-family:inherit;
+    transition:all .35s cubic-bezier(.4,0,.2,1);
+    text-transform:uppercase;letter-spacing:.05em;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    margin-top:8px;
+  }
+  .btn-submit.primary{background:var(--accent);color:var(--bg)}
+  .btn-submit.primary:hover{background:#d4f57a;transform:translateY(-2px);box-shadow:0 8px 30px rgba(201,240,107,.2)}
+  .btn-submit:disabled{opacity:.5;cursor:not-allowed;transform:none !important;box-shadow:none !important}
+
+  /* ─── Spinner ─── */
+  .spinner{
+    width:18px;height:18px;border:2px solid transparent;
+    border-top-color:var(--bg);border-radius:50%;
+    animation:spin .6s linear infinite;display:none;
+  }
+  .btn-submit.loading .spinner{display:block}
+  .btn-submit.loading .btn-text{display:none}
+
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ─── Messages ─── */
+  .msg{
+    padding:12px 16px;border-radius:10px;font-size:.875rem;
+    font-weight:500;display:none;align-items:center;gap:8px;
+    animation:msgIn .3s ease;
+  }
+  .msg.show{display:flex}
+  .msg.error{background:rgba(240,107,107,.1);border:1px solid rgba(240,107,107,.2);color:var(--error)}
+  .msg.success{background:rgba(107,240,160,.1);border:1px solid rgba(107,240,160,.2);color:var(--success)}
+
+  @keyframes msgIn{
+    from{opacity:0;transform:translateY(-8px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+
+  /* ─── Password Strength ─── */
+  .password-strength{display:flex;gap:4px;margin-top:4px}
+  .strength-bar{flex:1;height:3px;border-radius:2px;background:var(--border);transition:background .3s}
+  .strength-bar.weak{background:var(--error)}
+  .strength-bar.medium{background:#f0c96b}
+  .strength-bar.strong{background:var(--success)}
+  .strength-text{font-size:.75rem;color:var(--text-dim);margin-top:4px}
+
+  /* ─── Footer ─── */
+  .auth-footer{
+    text-align:center;padding:24px 20px;
+    font-size:.8rem;color:var(--text-dim);
+    position:relative;z-index:1;
+  }
+  .auth-footer a{color:var(--accent);text-decoration:none}
+  .auth-footer a:hover{text-decoration:underline}
+
+  @media(max-width:480px){
+    .auth-card{padding:36px 24px}
+    .auth-header h1{font-size:1.8rem}
+  }
+</style>
+<link rel="stylesheet" href="/lang.css">
+<link rel="stylesheet" href="/mobile.css">
+<script src="/lang.js" defer></script>
+<script src="/mobile.js" defer></script>
+</head>
+<body>
+
+<div class="auth-bg">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+</div>
+
+<!-- ═══════ NAV ═══════ -->
+<nav>
+  <div class="container">
+    <a href="/" class="nav-logo">mtk<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="/#about" data-i18n="nav.about">Hakkımda</a></li>
+      <li><a href="/#projects" data-i18n="nav.projects">Projeler</a></li>
+      <li><a href="/#github">GitHub</a></li>
+      <li><a href="/#youtube">YouTube</a></li>
+      <li><a href="/#contact" data-i18n="nav.contact">İletişim</a></li>
+    </ul>
+    <div class="nav-auth">
+      <a href="/loginregister.html" class="nav-auth-btn" style="border-color:var(--accent)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg>
+        <span data-i18n="nav.login">Giriş Yap / Kayıt Ol</span>
+      </a>
+    </div>
+    <button class="lang-toggle" id="lang-toggle" title="Change language"><img src="/flag-tr.svg" alt="TR" class="active"><img src="/flag-en.svg" alt="EN"></button>
+    <button class="hamburger-btn" id="hamburger-btn" aria-label="Menü">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="/#about" data-i18n="nav.about">Hakkımda</a>
+  <a href="/#projects" data-i18n="nav.projects">Projeler</a>
+  <a href="/#github">GitHub</a>
+  <a href="/#youtube">YouTube</a>
+  <a href="/#contact" data-i18n="nav.contact">İletişim</a>
+</div>
+
+<!-- ═══════ AUTH ═══════ -->
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1 data-i18n="auth.welcome" data-i18n-html>Hoş <em>geldin</em></h1>
+      <p data-i18n="auth.subtitle">Hesabına giriş yap veya yeni hesap oluştur</p>
+    </div>
+
+    <!-- Tab Toggle -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-tab="login"data-i18n="auth.tab.login">Giriş Yap</button>
+      <button class="auth-tab" data-tab="register"data-i18n="auth.tab.register">Kayıt Ol</button>
+    </div>
+
+    <!-- Message -->
+    <div class="msg" id="msg"></div>
+
+    <!-- ─── Login Form ─── -->
+    <form class="auth-form active" id="login-form" autocomplete="on">
+      <div class="form-group">
+        <label for="login-email" data-i18n="auth.login.label">Kullanıcı Adı veya E-posta</label>
+        <input type="text" id="login-email" name="login" placeholder="kullanici_adi veya ornek@mail.com" data-i18n-ph="ph.login" required autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label for="login-password" data-i18n="auth.password">Şifre</label>
+        <div class="password-wrapper">
+          <input type="password" id="login-password" name="password" placeholder="••••••••" required autocomplete="current-password">
+          <button type="button" class="password-toggle" onclick="togglePassword(this)" aria-label="Şifreyi göster">👁</button>
+        </div>
+        <div style="text-align:right;margin-top:4px;padding-right:14px">
+          <a href="#" id="forgot-link" style="color:var(--text-dim);font-size:.78rem;text-decoration:none;transition:color .3s" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-dim)'"data-i18n="auth.forgot">Şifremi Unuttum</a>
+        </div>
+      </div>
+      <button type="submit" class="btn-submit primary">
+        <span class="btn-text" data-i18n="auth.login.btn">Giriş Yap</span>
+        <div class="spinner"></div>
+      </button>
+    </form>
+
+    <!-- ─── Forgot Password Form ─── -->
+    <form class="auth-form" id="forgot-form" autocomplete="on">
+      <div style="text-align:center;margin-bottom:8px">
+        <p style="color:var(--text-dim);font-size:.9rem"><span data-i18n="auth.forgot.desc">Kullanıcı adını veya e-posta adresini gir, sana sıfırlama bağlantısı gönderelim.</span></p>
+      </div>
+      <div class="form-group">
+        <label for="forgot-login" data-i18n="auth.forgot.label">Kullanıcı Adı veya E-posta</label>
+        <input type="text" id="forgot-login" name="login" placeholder="kullanici_adi veya ornek@mail.com" data-i18n-ph="ph.login" required>
+      </div>
+      <button type="submit" class="btn-submit primary">
+        <span class="btn-text" data-i18n="auth.forgot.btn">Sıfırlama Bağlantısı Gönder</span>
+        <div class="spinner"></div>
+      </button>
+    </form>
+
+    <!-- ─── Register Form ─── -->
+    <form class="auth-form" id="register-form" autocomplete="on">
+      <div class="form-group">
+        <label for="reg-username" data-i18n="auth.reg.username">Kullanıcı Adı</label>
+        <input type="text" id="reg-username" name="username" placeholder="kullanici_adi" data-i18n-ph="ph.username" required autocomplete="username" minlength="3" maxlength="50">
+      </div>
+      <div class="form-group">
+        <label for="reg-email" data-i18n="auth.reg.email">E-posta</label>
+        <input type="email" id="reg-email" name="email" placeholder="ornek@mail.com" data-i18n-ph="ph.email" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label for="reg-password" data-i18n="auth.reg.password">Şifre</label>
+        <div class="password-wrapper">
+          <input type="password" id="reg-password" name="password" placeholder="En az 8 karakter" data-i18n-ph="ph.newpass" required autocomplete="new-password" minlength="8">
+          <button type="button" class="password-toggle" onclick="togglePassword(this)" aria-label="Şifreyi göster">👁</button>
+        </div>
+        <div class="password-strength" id="strength-bars">
+          <div class="strength-bar"></div>
+          <div class="strength-bar"></div>
+          <div class="strength-bar"></div>
+          <div class="strength-bar"></div>
+        </div>
+        <div class="strength-text" id="strength-text"></div>
+      </div>
+      <button type="submit" class="btn-submit primary">
+        <span class="btn-text" data-i18n="auth.reg.btn">Kayıt Ol</span>
+        <div class="spinner"></div>
+      </button>
+    </form>
+  </div>
+</div>
+
+<footer style="text-align:center;padding:24px 20px;font-size:.8rem;color:var(--text-dim);border-top:1px solid var(--border);position:relative;z-index:1">
+  <p><span data-i18n="footer.copy">© 2026 Mehmet Talha Kaya · Fırat Üniversitesi Yazılım Mühendisliği</span></p>
+</footer>
+
+<script>
+  // ─── Tab Switching ───
+  const tabs = document.querySelectorAll('.auth-tab');
+  const forms = document.querySelectorAll('.auth-form');
+  const msg = document.getElementById('msg');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      forms.forEach(f => f.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(`${tab.dataset.tab}-form`).classList.add('active');
+      hideMsg();
+    });
+  });
+
+  // ─── Password Toggle ───
+  function togglePassword(btn) {
+    const input = btn.previousElementSibling;
+    if (input.type === 'password') {
+      input.type = 'text';
+      btn.textContent = '🙈';
+    } else {
+      input.type = 'password';
+      btn.textContent = '👁';
+    }
+  }
+
+  // ─── Password Strength ───
+  const regPassword = document.getElementById('reg-password');
+  const strengthBars = document.querySelectorAll('#strength-bars .strength-bar');
+  const strengthText = document.getElementById('strength-text');
+
+  regPassword.addEventListener('input', () => {
+    const val = regPassword.value;
+    let score = 0;
+    if (val.length >= 8) score++;
+    if (/[a-z]/.test(val) && /[A-Z]/.test(val)) score++;
+    if (/\d/.test(val)) score++;
+    if (/[^a-zA-Z0-9]/.test(val)) score++;
+
+    const levels = ['', t('str.weak'), t('str.medium'), t('str.good'), t('str.strong')];
+    const classes = ['', 'weak', 'medium', 'strong', 'strong'];
+
+    strengthBars.forEach((bar, i) => {
+      bar.className = 'strength-bar';
+      if (i < score) bar.classList.add(classes[score]);
+    });
+    strengthText.textContent = val.length > 0 ? levels[score] : '';
+  });
+
+  // ─── Messages ───
+  function showMsg(text, type = 'error') {
+    msg.textContent = text;
+    msg.className = `msg show ${type}`;
+  }
+
+  function hideMsg() {
+    msg.className = 'msg';
+  }
+
+  // ─── Loading State ───
+  function setLoading(btn, loading) {
+    if (loading) {
+      btn.classList.add('loading');
+      btn.disabled = true;
+    } else {
+      btn.classList.remove('loading');
+      btn.disabled = false;
+    }
+  }
+
+  function getRedirectPath(user) {
+    return user && user.role === 'admin' ? '/admin.html' : '/dashboard.html';
+  }
+
+  // ─── Login ───
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideMsg();
+    const btn = e.target.querySelector('.btn-submit');
+    setLoading(btn, true);
+
+    try {
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          login: document.getElementById('login-email').value.trim(),
+          password: document.getElementById('login-password').value,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        showMsg(data.error || t('msg.login.fail'));
+        return;
+      }
+
+      // Token'ı kaydet
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+
+      showMsg(t('msg.login.ok'), 'success');
+
+      setTimeout(() => {
+        window.location.href = getRedirectPath(data.user);
+      }, 1000);
+    } catch (err) {
+      showMsg(t('msg.server'));
+    } finally {
+      setLoading(btn, false);
+    }
+  });
+
+  // ─── Register ───
+  document.getElementById('register-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideMsg();
+    const btn = e.target.querySelector('.btn-submit');
+    setLoading(btn, true);
+
+    try {
+      const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: document.getElementById('reg-username').value.trim(),
+          email: document.getElementById('reg-email').value.trim(),
+          password: document.getElementById('reg-password').value,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        showMsg(data.error || t('msg.reg.fail'));
+        return;
+      }
+
+      // Token'ı kaydet
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+
+      showMsg(t('msg.reg.ok'), 'success');
+
+      setTimeout(() => {
+        window.location.href = getRedirectPath(data.user);
+      }, 1000);
+    } catch (err) {
+      showMsg(t('msg.server'));
+    } finally {
+      setLoading(btn, false);
+    }
+  });
+
+  // ─── Zaten giriş yapılmışsa yönlendir ───
+  (async function redirectIfAuthenticated() {
+    const existingToken = localStorage.getItem('token');
+    if (!existingToken) return;
+
+    try {
+      const res = await fetch('/api/me', {
+        headers: { 'Authorization': `Bearer ${existingToken}` },
+      });
+
+      if (!res.ok) throw new Error('unauthorized');
+
+      const data = await res.json();
+      localStorage.setItem('user', JSON.stringify(data.user));
+      window.location.href = getRedirectPath(data.user);
+    } catch (err) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+    }
+  })();
+
+  // ─── Şifremi Unuttum ───
+  const forgotLink = document.getElementById('forgot-link');
+  const authTabs = document.querySelector('.auth-tabs');
+  const authHeader = document.querySelector('.auth-header');
+
+  forgotLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    forms.forEach(f => f.classList.remove('active'));
+    tabs.forEach(t => t.classList.remove('active'));
+    authTabs.style.display = 'none';
+    document.getElementById('forgot-form').classList.add('active');
+    authHeader.querySelector('h1').innerHTML = 'Şifremi <em>Unuttum</em>';
+    authHeader.querySelector('p').textContent = 'Sana bir sıfırlama bağlantısı göndereceğiz';
+    hideMsg();
+  });
+
+  // Tab'lara tıklayınca forgot formundan geri dön
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      authTabs.style.display = 'flex';
+      authHeader.querySelector('h1').innerHTML = 'Hoş <em>geldin</em>';
+      authHeader.querySelector('p').textContent = 'Hesabına giriş yap veya yeni hesap oluştur';
+    });
+  });
+
+  // ─── Forgot Password Submit ───
+  document.getElementById('forgot-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideMsg();
+    const btn = e.target.querySelector('.btn-submit');
+    setLoading(btn, true);
+
+    try {
+      const res = await fetch('/api/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          login: document.getElementById('forgot-login').value.trim(),
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        showMsg(data.error || t('msg.reset.error'));
+        return;
+      }
+
+      showMsg(t('msg.reset.sent'), 'success');
+      document.getElementById('forgot-login').value = '';
+    } catch (err) {
+      showMsg(t('msg.server'));
+    } finally {
+      setLoading(btn, false);
+    }
+  });
+</script>
+</body>
+</html>

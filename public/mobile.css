@@ -1,0 +1,106 @@
+/* ─── Mobile Responsive ─── */
+
+/* Hamburger button - hidden on desktop */
+.hamburger-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  order: 3;
+}
+.hamburger-btn svg {
+  stroke: #e8e6e1;
+  transition: stroke .3s;
+}
+
+/* Mobile dropdown - always hidden by default */
+.mobile-menu {
+  display: none;
+  background: #111113;
+  border-bottom: 1px solid #2a2a2e;
+  padding: 12px 0;
+}
+.mobile-menu.open {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.mobile-menu a {
+  color: #8a8884;
+  text-decoration: none;
+  font-size: .9rem;
+  font-weight: 500;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  padding: 14px 0;
+  width: 100%;
+  text-align: center;
+  transition: color .3s, background .3s;
+}
+.mobile-menu a:hover {
+  color: #c9f06b;
+  background: #1a1a1e;
+}
+
+/* ─── Mobile breakpoint ─── */
+@media (max-width: 768px) {
+  /* Show hamburger */
+  .hamburger-btn {
+    display: block;
+  }
+
+  /* Hide desktop nav links */
+  .nav-links {
+    display: none !important;
+  }
+
+  /* Shrink auth/user buttons */
+  .nav-auth-btn {
+    font-size: .65rem !important;
+    padding: 5px 12px !important;
+    gap: 5px !important;
+  }
+  .nav-auth-btn svg {
+    width: 11px !important;
+    height: 11px !important;
+  }
+
+  .nav-user-btn {
+    font-size: .65rem !important;
+    padding: 5px 12px !important;
+    gap: 5px !important;
+  }
+  .nav-user-btn svg {
+    width: 11px !important;
+    height: 11px !important;
+  }
+
+  /* Nav container adjustments */
+  nav .container {
+    gap: 8px;
+  }
+
+  /* Hero adjustments */
+  .hero-title {
+    font-size: clamp(2.2rem, 10vw, 3.5rem) !important;
+  }
+
+  /* Auth card adjustments */
+  .auth-card {
+    margin: 0 8px;
+    padding: 32px 20px !important;
+  }
+
+  /* Dashboard adjustments */
+  .dashboard {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+  .welcome-card {
+    padding: 32px 24px !important;
+  }
+  .welcome-card h1 {
+    font-size: 1.8rem !important;
+  }
+}

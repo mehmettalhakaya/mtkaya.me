@@ -1,0 +1,29 @@
+/* ─── Language Toggle ─── */
+.lang-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  margin-left: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1;
+}
+.lang-toggle img {
+  width: 24px;
+  height: 16px;
+  border-radius: 2px;
+  opacity: .35;
+  transition: opacity .3s;
+  object-fit: cover;
+}
+.lang-toggle img.active {
+  opacity: 1;
+}
+.lang-toggle:hover img {
+  opacity: .6;
+}
+.lang-toggle:hover img.active {
+  opacity: 1;
+}

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — mtk</title>
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+  :root{
+    --bg:#0a0a0b;--bg2:#111113;--bg3:#1a1a1e;
+    --text:#e8e6e1;--text-dim:#8a8884;
+    --accent:#c9f06b;--accent2:#6bc9f0;--accent3:#f06b8a;
+    --border:#2a2a2e;--radius:14px;
+  }
+
+  html{font-size:16px;overflow-y:scroll}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;flex-direction:column}
+
+  ::selection{background:var(--accent);color:var(--bg)}
+
+  body::before{
+    content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.035;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ─── Nav ─── */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    background:rgba(10,10,11,.7);border-bottom:1px solid var(--border);
+  }
+  nav .container{display:flex;align-items:center;justify-content:space-between;height:64px;max-width:1200px;margin:0 auto;padding:0 clamp(20px,4vw,60px);position:relative}
+  .nav-logo{font-family:'Instrument Serif',serif;font-size:1.5rem;color:var(--text);text-decoration:none;letter-spacing:-.02em}
+  .nav-logo span{color:var(--accent)}
+  .nav-links{display:flex;gap:32px;list-style:none;align-items:center;position:absolute;left:50%;transform:translateX(-50%)}
+  .nav-links a{color:var(--text-dim);text-decoration:none;font-size:.875rem;font-weight:500;transition:color .3s;letter-spacing:.02em;text-transform:uppercase}
+  .nav-links a:hover{color:var(--accent)}
+  .nav-auth{margin-left:auto}
+  .nav-user-btn{
+    background:none;border:1px solid var(--border);border-radius:60px;padding:8px 20px;
+    color:var(--accent);font-family:inherit;font-size:.8rem;font-weight:600;
+    cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .3s;
+    letter-spacing:.02em;text-transform:uppercase;
+  }
+  .nav-user-btn:hover{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+  .nav-user-btn:hover svg{stroke:var(--bg)}
+
+  @media(max-width:640px){.nav-links{gap:16px}.nav-links a{font-size:.75rem}}
+
+  /* ─── Dashboard ─── */
+  .dashboard{
+    max-width:800px;margin:0 auto;padding:120px clamp(20px,4vw,60px) 60px;
+    position:relative;z-index:1;
+  }
+
+  .welcome-card{
+    background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
+    padding:48px;margin-bottom:32px;
+    animation:cardIn .6s ease forwards;
+  }
+
+  @keyframes cardIn{
+    from{opacity:0;transform:translateY(20px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+
+  .welcome-card h1{
+    font-family:'Instrument Serif',serif;font-size:2.5rem;
+    letter-spacing:-.03em;margin-bottom:12px;
+  }
+  .welcome-card h1 em{font-style:italic;color:var(--accent)}
+  .welcome-card p{color:var(--text-dim);font-size:1.05rem}
+
+  .info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+
+  .info-card{
+    background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
+    padding:28px;transition:border-color .3s,transform .3s;
+    animation:cardIn .6s ease forwards;
+  }
+  .info-card:nth-child(1){animation-delay:.1s;opacity:0}
+  .info-card:nth-child(2){animation-delay:.2s;opacity:0}
+  .info-card:nth-child(3){animation-delay:.3s;opacity:0}
+
+  .info-card:hover{border-color:var(--accent);transform:translateY(-4px)}
+  .info-label{font-size:.75rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.15em;margin-bottom:8px}
+  .info-value{font-size:1.1rem;color:var(--text);word-break:break-all}
+
+  #loading{
+    text-align:center;padding:120px 20px;
+    color:var(--text-dim);font-size:1.1rem;
+    position:relative;z-index:1;
+  }
+
+  footer{
+    text-align:center;padding:40px 20px;font-size:.8rem;color:var(--text-dim);
+    border-top:1px solid var(--border);margin-top:auto;position:relative;z-index:1;
+  }
+</style>
+<link rel="stylesheet" href="/lang.css">
+<link rel="stylesheet" href="/mobile.css">
+<script src="/lang.js" defer></script>
+<script src="/mobile.js" defer></script>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a href="/" class="nav-logo">mtk<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="/#about" data-i18n="nav.about">Hakkımda</a></li>
+      <li><a href="/#projects" data-i18n="nav.projects">Projeler</a></li>
+      <li><a href="/#github">GitHub</a></li>
+      <li><a href="/#youtube">YouTube</a></li>
+      <li><a href="/#contact" data-i18n="nav.contact">İletişim</a></li>
+    </ul>
+    <div class="nav-auth">
+      <div id="user-menu" style="position:relative">
+        <button id="user-btn" class="nav-user-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg>
+          <span id="nav-username">...</span>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div id="user-dropdown" style="display:none;position:absolute;right:0;top:calc(100% + 8px);background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:8px;min-width:180px;z-index:200;box-shadow:0 8px 30px rgba(0,0,0,.4)">
+          <a href="/dashboard.html" style="display:flex;align-items:center;gap:10px;padding:10px 14px;color:var(--accent);text-decoration:none;border-radius:8px;font-size:.875rem;transition:background .2s" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background='transparent'">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            <span data-i18n="dash.dashboard">Kullanıcı Paneli</span>
+          </a>
+          <a href="/admin.html" id="admin-link" style="display:none;align-items:center;gap:10px;padding:10px 14px;color:var(--text);text-decoration:none;border-radius:8px;font-size:.875rem;transition:background .2s" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background='transparent'">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>
+            <span data-i18n="dash.adminpanel">Yönetici Paneli</span>
+          </a>
+          <div style="height:1px;background:var(--border);margin:4px 0"></div>
+          <button onclick="logout()" style="display:flex;align-items:center;gap:10px;padding:10px 14px;color:var(--accent3);background:none;border:none;border-radius:8px;font-size:.875rem;font-family:inherit;cursor:pointer;width:100%;transition:background .2s" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background='transparent'">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <span data-i18n="dash.logout">Çıkış Yap</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <button class="lang-toggle" id="lang-toggle" title="Change language"><img src="/flag-tr.svg" alt="TR" class="active"><img src="/flag-en.svg" alt="EN"></button>
+    <button class="hamburger-btn" id="hamburger-btn" aria-label="Menü">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="/#about" data-i18n="nav.about">Hakkımda</a>
+  <a href="/#projects" data-i18n="nav.projects">Projeler</a>
+  <a href="/#github">GitHub</a>
+  <a href="/#youtube">YouTube</a>
+  <a href="/#contact" data-i18n="nav.contact">İletişim</a>
+</div>
+
+<div id="loading" data-i18n="dash.loading">Yükleniyor...</div>
+
+<div class="dashboard" id="dashboard" style="display:none">
+  <div class="welcome-card">
+    <h1><span data-i18n="dash.welcome">Hoş geldin,</span> <em id="welcome-name">...</em></h1>
+    <p data-i18n="dash.desc">Hesabın başarıyla doğrulandı. Aşağıda profil bilgilerin yer alıyor.</p>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="info-label" data-i18n="dash.username">Kullanıcı Adı</div>
+      <div class="info-value" id="info-username">—</div>
+    </div>
+    <div class="info-card">
+      <div class="info-label" data-i18n="dash.email">E-posta</div>
+      <div class="info-value" id="info-email">—</div>
+    </div>
+    <div class="info-card">
+      <div class="info-label" data-i18n="dash.date">Kayıt Tarihi</div>
+      <div class="info-value" id="info-date">—</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p><span data-i18n="footer.copy">© 2026 Mehmet Talha Kaya · Fırat Üniversitesi Yazılım Mühendisliği</span></p>
+</footer>
+
+<script>
+  const token = localStorage.getItem('token');
+  let currentUser = null;
+
+  if (!token) {
+    window.location.href = '/loginregister.html';
+  }
+
+  // Dropdown toggle
+  const userBtn = document.getElementById('user-btn');
+  const userDropdown = document.getElementById('user-dropdown');
+  userBtn.addEventListener('click', () => {
+    userDropdown.style.display = userDropdown.style.display === 'none' ? 'block' : 'none';
+  });
+  document.addEventListener('click', (e) => {
+    if (!userBtn.contains(e.target) && !userDropdown.contains(e.target)) {
+      userDropdown.style.display = 'none';
+    }
+  });
+
+  function getCurrentLocale() {
+    return (localStorage.getItem('lang') || 'tr') === 'en' ? 'en-US' : 'tr-TR';
+  }
+
+  function updatePageTitle() {
+    document.title = `${window.t ? t('dash.dashboard') : 'Dashboard'} — mtk`;
+  }
+
+  function renderProfile(user) {
+    document.getElementById('nav-username').textContent = user.username;
+    document.getElementById('welcome-name').textContent = user.username;
+    document.getElementById('info-username').textContent = user.username;
+    document.getElementById('info-email').textContent = user.email;
+    document.getElementById('info-date').textContent = new Date(user.created_at).toLocaleDateString(getCurrentLocale(), {
+      year: 'numeric', month: 'long', day: 'numeric'
+    });
+
+    document.getElementById('admin-link').style.display = user.role === 'admin' ? 'flex' : 'none';
+  }
+
+  async function loadProfile() {
+    try {
+      const res = await fetch('/api/me', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (!res.ok) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/loginregister.html';
+        return;
+      }
+
+      const data = await res.json();
+      currentUser = data.user;
+      localStorage.setItem('user', JSON.stringify(currentUser));
+
+      renderProfile(currentUser);
+
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+    } catch (err) {
+      console.error(err);
+      document.getElementById('loading').textContent = window.t ? t('dash.error') : 'Bir hata oluştu. Lütfen tekrar deneyin.';
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = '/';
+  }
+
+  window.addEventListener('langChanged', () => {
+    updatePageTitle();
+    if (currentUser) {
+      renderProfile(currentUser);
+    }
+  });
+
+  updatePageTitle();
+  loadProfile();
+</script>
+</body>
+</html>
